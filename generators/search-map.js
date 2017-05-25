@@ -4,7 +4,7 @@ var fs = require('fs'),
 	Q = require('q'),
 	writeFile = Q.denodeify(fs.writeFile),
 	mkdirs = Q.denodeify(require("fs-extra").mkdirs),
-	sanitizeHtml = require('sanitize-html');
+	markdown = require('github-flavored-markdown');
 
 /**
  * @function bitDocs.generators.searchMap.searchMap
@@ -28,7 +28,7 @@ module.exports = function(docMap, siteConfig) {
 			var searchObj = {
 				name: docObj.name,
 				title: docObj.title,
-				description: sanitizeHtml(docObj.description, { allowedTags: []}),
+				description: markdown.parse(docObj.description),
 				url: filename(docObj, siteConfig)
 			};
 			searchMap[name] = searchObj;
