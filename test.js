@@ -63,10 +63,10 @@ describe("bitDocs.generators.searchMap",function(){
 	});
 
 	it("(bitDocs.generators.searchMap.searchMap) Strips HTML from the description", function(done){
-		var descriptionShouldEqual = 'The best, most hardened and generally useful libraries in "CanJS".';
-
+		var descriptionShouldEqual = 'The best, most hardened and generally useful libraries in &quot;CanJS&quot;.\n';
 		docMapPromise.then(function(docMap){
 			searchMap(docMap, siteConfig).then(function(searchMapResult){
+				console.log(searchMapResult['can-core'].description);
 				assert.ok(descriptionShouldEqual === searchMapResult['can-core'].description);
 				done();
 			});
