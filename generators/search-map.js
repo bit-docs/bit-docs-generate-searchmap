@@ -4,7 +4,10 @@ var fs = require('fs'),
 	Q = require('q'),
 	writeFile = Q.denodeify(fs.writeFile),
 	mkdirs = Q.denodeify(require("fs-extra").mkdirs),
-	sanitizeHtml = require('sanitize-html');
+	striptags = require('striptags'),
+	commonmark = require('commonmark'),
+	markdownParser = new commonmark.Parser(),
+	markdownRenderer = new commonmark.HtmlRenderer();
 
 /**
  * @function bitDocs.generators.searchMap.searchMap
@@ -21,14 +24,17 @@ var fs = require('fs'),
 module.exports = function(docMap, siteConfig) {
 	var searchMap = {},
 		name;
-
 	for (name in docMap) {
 		if (docMap.hasOwnProperty(name)) {
 			var docObj = docMap[name];
+			var description = markdownParser.parse(docObj.description);
+			description = markdownRenderer.render(description);
+			description = striptags(description);
+	
 			var searchObj = {
 				name: docObj.name,
 				title: docObj.title,
-				description: sanitizeHtml(docObj.description, { allowedTags: []}),
+				description: description,
 				url: filename(docObj, siteConfig)
 			};
 			searchMap[name] = searchObj;

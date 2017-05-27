@@ -26,11 +26,12 @@
   },
   "homepage": "https://github.com/bit-docs/bit-docs-generate-searchmap#readme",
   "dependencies": {
+    "commonmark": "^0.27.0",
     "fs-extra": "0.30.0",
     "lodash": "~4.13.1",
     "md5": "2.1.0",
-    "sanitize-html": "^1.14.1",
-    "steal-tools": "0.16.X"
+    "steal-tools": "0.16.X",
+    "striptags": "^3.0.1"
   },
   "devDependencies": {
     "mocha": ">= 1.18.0",
