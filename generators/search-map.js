@@ -4,11 +4,9 @@ var fs = require('fs'),
 	Q = require('q'),
 	writeFile = Q.denodeify(fs.writeFile),
 	mkdirs = Q.denodeify(require("fs-extra").mkdirs),
-	striptags = require('striptags'),
-	commonmark = require('commonmark'),
-	markdownParser = new commonmark.Parser(),
-	markdownRenderer = new commonmark.HtmlRenderer();
-
+	unescapeHTML = require("unescape-html"),
+	helpers = require('bit-docs-generate-html/build/make_default_helpers')({}, {}, function(){}, {});
+	
 /**
  * @function bitDocs.generators.searchMap.searchMap
  * @parent bitDocs.generators.searchMap.methods
@@ -27,10 +25,10 @@ module.exports = function(docMap, siteConfig) {
 	for (name in docMap) {
 		if (docMap.hasOwnProperty(name)) {
 			var docObj = docMap[name];
-			var description = markdownParser.parse(docObj.description);
-			description = markdownRenderer.render(description);
-			description = striptags(description);
-	
+			
+			var description = helpers.stripMarkdown(docObj.description);
+			description = unescapeHTML(description);
+
 			var searchObj = {
 				name: docObj.name,
 				title: docObj.title,
