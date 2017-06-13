@@ -31,7 +31,7 @@ module.exports = function(docMap, siteConfig) {
 
 			var searchObj = {
 				name: docObj.name,
-				title: docObj.title,
+				title: docObj.title || docObj.name,
 				description: description,
 				url: filename(docObj, siteConfig)
 			};

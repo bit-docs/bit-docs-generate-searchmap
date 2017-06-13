@@ -26,6 +26,12 @@ var docMap = {
 		      "%>"
 		    ],
 		    "comment": " "
+		  },
+		  "no-title": {
+			  "body": "Hello World",
+			  "name": "greeting",
+			  "title": "",
+			  "description": ""
 		  }
 		},
 		siteConfig = {
@@ -48,16 +54,29 @@ describe("bitDocs.generators.searchMap",function(){
 		rmdir(path.join(__dirname,"test_tmp"),done);
 	});
 
-
 	it("(bitDocs.generators.searchMap.searchMap) Generates a searchMap file", function(done){
 		docMapPromise.then(function(docMap){
-			searchMap(docMap, siteConfig).then(function(){
-				if(!fs.existsSync(path.join(__dirname,"test_tmp","searchMap.json"))) {
-					done(new Error("searchMap.json does not exist"));
-				} else{
-					assert.ok(true, "searchMap.json exists");
-					done();
-				}
+			try{
+				searchMap(docMap, siteConfig).then(function(){
+					if(!fs.existsSync(path.join(__dirname,"test_tmp","searchMap.json"))) {
+						done(new Error("searchMap.json does not exist"));
+					} else{
+						assert.ok(true, "searchMap.json exists");
+						done();
+					}
+				});
+			}catch(e){
+				console.error(e);
+			}
+
+		});
+	});
+
+	it("(bitDocs.generators.searchMap.searchMap) Fallback to name if no title", function(done){
+		docMapPromise.then(function(docMap){
+			searchMap(docMap, siteConfig).then(function(searchMapResult){
+				assert.ok("greeting" === searchMapResult['no-title'].title);
+				done();
 			});
 		});
 	});
