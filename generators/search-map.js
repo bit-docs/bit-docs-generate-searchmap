@@ -25,17 +25,19 @@ module.exports = function(docMap, siteConfig) {
 	for (name in docMap) {
 		if (docMap.hasOwnProperty(name)) {
 			var docObj = docMap[name];
-			
-			var description = helpers.stripMarkdown(docObj.description);
-			description = unescapeHTML(description);
+			// If there is no body, it's likely we don't want to index it
+			if(docObj.description || docObj.signatures || docObj.params || docObj.return || docObj.options){
+				var description = helpers.stripMarkdown(docObj.description);
+				description = unescapeHTML(description);
 
-			var searchObj = {
-				name: docObj.name,
-				title: docObj.title,
-				description: description,
-				url: filename(docObj, siteConfig)
-			};
-			searchMap[name] = searchObj;
+				var searchObj = {
+					name: docObj.name,
+					title: docObj.title || docObj.name,
+					description: description,
+					url: filename(docObj, siteConfig)
+				};
+				searchMap[name] = searchObj;	
+			}
 		}
 	}
 

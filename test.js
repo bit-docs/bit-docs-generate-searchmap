@@ -26,6 +26,17 @@ var docMap = {
 		      "%>"
 		    ],
 		    "comment": " "
+		  },
+		  "no-body": {
+			"name": "can-core",
+			"title": "Core",
+			"description": ""
+		  },
+		  "has-signature": {
+			"name": "can-core",
+			"title": "Core",
+			"signatures": "something",
+			"description": ""
 		  }
 		},
 		siteConfig = {
@@ -67,6 +78,16 @@ describe("bitDocs.generators.searchMap",function(){
 		docMapPromise.then(function(docMap){
 			searchMap(docMap, siteConfig).then(function(searchMapResult){
 				assert.ok(descriptionShouldEqual === searchMapResult['can-core'].description);
+				done();
+			});
+		});
+	});
+
+	it("(bitDocs.generators.searchMap.searchMap) Filters hidden and empty docObjects", function(done){
+		docMapPromise.then(function(docMap){
+			searchMap(docMap, siteConfig).then(function(searchMapResult){
+				assert.ok(!searchMapResult['no-body']);
+				assert.ok(!!searchMapResult['has-signature']);
 				done();
 			});
 		});
