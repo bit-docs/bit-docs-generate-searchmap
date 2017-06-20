@@ -4,7 +4,7 @@ var fs = require('fs'),
 	Q = require('q'),
 	writeFile = Q.denodeify(fs.writeFile),
 	mkdirs = Q.denodeify(require("fs-extra").mkdirs),
-	unescapeHTML = require("unescape-html"),
+	striptags = require("striptags"),
 	helpers = require('bit-docs-generate-html/build/make_default_helpers')({}, {}, function(){}, {});
 	
 /**
@@ -26,8 +26,12 @@ module.exports = function(docMap, siteConfig) {
 		if (docMap.hasOwnProperty(name)) {
 			var docObj = docMap[name];
 			
-			var description = helpers.stripMarkdown(docObj.description);
-			description = unescapeHTML(description);
+			var description = helpers.makeHtml(docObj.description);
+			description = helpers.makeLinks(description);
+			description = striptags(description, 
+				// Allowed tags
+				['a', 'em', 'code']
+			);
 
 			var searchObj = {
 				name: docObj.name,
