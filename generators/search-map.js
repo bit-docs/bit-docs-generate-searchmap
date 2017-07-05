@@ -6,6 +6,8 @@ var writeFile = Q.denodeify(fs.writeFile);
 var mkdirs = Q.denodeify(require("fs-extra").mkdirs);
 var striptags = require("striptags");
 var bitDocsHelpers = require('bit-docs-generate-html/build/make_default_helpers');
+var Entities = require('html-entities').AllHtmlEntities;
+var entities = new Entities();
 	
 /**
  * @function bitDocs.generators.searchMap.searchMap
@@ -32,7 +34,8 @@ module.exports = function(docMap, siteConfig) {
 				
 				var description = helpers.makeHtml(docObj.description);
 				description = helpers.makeLinks(description);
-				description = striptags(description, 
+				description = entities.decode(description);
+				description = striptags(description,
 					// Allowed tags
 					['a', 'em', 'code']
 				);
@@ -41,7 +44,8 @@ module.exports = function(docMap, siteConfig) {
 					name: docObj.name,
 					title: docObj.title,
 					description: description,
-					url: filename(docObj, siteConfig)
+					url: filename(docObj, siteConfig),
+					dest: 'doc/'
 				};
 				searchMap[name] = searchObj;
 			}
