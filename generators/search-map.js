@@ -1,11 +1,11 @@
-var fs = require('fs'),
-	path = require('path'),
-	filename = require("../util/filename"),
-	Q = require('q'),
-	writeFile = Q.denodeify(fs.writeFile),
-	mkdirs = Q.denodeify(require("fs-extra").mkdirs),
-	unescapeHTML = require("unescape-html"),
-	helpers = require('bit-docs-generate-html/build/make_default_helpers')({}, {}, function(){}, {});
+var fs = require('fs');
+var path = require('path');
+var filename = require("../util/filename");
+var Q = require('q');
+var writeFile = Q.denodeify(fs.writeFile);
+var mkdirs = Q.denodeify(require("fs-extra").mkdirs);
+var striptags = require("striptags");
+var bitDocsHelpers = require('bit-docs-generate-html/build/make_default_helpers');
 	
 /**
  * @function bitDocs.generators.searchMap.searchMap
@@ -20,33 +20,42 @@ var fs = require('fs'),
  * @return {Promise} Resolves when searchMap has been written.
  */
 module.exports = function(docMap, siteConfig) {
-	var searchMap = {},
-		name;
-	for (name in docMap) {
-		if (docMap.hasOwnProperty(name)) {
-			var docObj = docMap[name];
-			// If there is no body, it's likely we don't want to index it
-			if(docObj.description || docObj.signatures || docObj.params || docObj.return || docObj.options){
-				var description = helpers.stripMarkdown(docObj.description);
-				description = unescapeHTML(description);
+	return new Promise(function(resolve, reject) {
+		var searchMap = {};
+		var name;
+		for (name in docMap) {
+			if (docMap.hasOwnProperty(name)) {
+				var docObj = docMap[name];
+				// If there is no body, it's likely we don't want to index it
+				if(docObj.description || docObj.signatures || docObj.params || docObj.return || docObj.options){
+					var helpers = bitDocsHelpers(docMap, siteConfig, function(){
+						return docObj;
+					}, {});
+					
+					var description = helpers.makeHtml(docObj.description);
+					description = helpers.makeLinks(description);
+					description = striptags(description, 
+						// Allowed tags
+						['a', 'em', 'code']
+					);
 
-				var searchObj = {
-					name: docObj.name,
-					title: docObj.title || docObj.name,
-					description: description,
-					url: filename(docObj, siteConfig)
-				};
-				searchMap[name] = searchObj;	
+					var searchObj = {
+						name: docObj.name,
+						title: docObj.title,
+						description: description,
+						url: filename(docObj, siteConfig)
+					};
+					searchMap[name] = searchObj;
+				}
 			}
 		}
-	}
 
-	var dest = path.join(siteConfig.dest, 'searchMap.json');
+		var dest = path.join(siteConfig.dest, 'searchMap.json');
 
-	return mkdirs(siteConfig.dest).then(function(){
-		return writeFile(dest, JSON.stringify(searchMap)).then(function(){
-			return searchMap;
-		});
+		mkdirs(siteConfig.dest).then(function(){
+			writeFile(dest, JSON.stringify(searchMap)).then(function(){
+				resolve(searchMap);
+			}, reject);
+		}, reject);
 	});
-
 };
