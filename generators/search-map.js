@@ -49,7 +49,8 @@ module.exports = function(docMap, siteConfig) {
 						name: docObj.name,
 						title: docObj.title,
 						description: description,
-						url: filename(docObj, siteConfig)
+						url: filename(docObj, siteConfig),
+						dest: 'doc/'
 					};
 					searchMap[name] = searchObj;
 				}
