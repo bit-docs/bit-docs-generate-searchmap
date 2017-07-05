@@ -46,7 +46,9 @@ describe("bitDocs.generators.searchMap",function(){
 		docMapPromise.then(function(docMap){
 			return searchMap(docMap, siteConfig);
 		}).then(function(searchMapResult){
-			assert.ok(searchMapResult['can-core'].description.indexOf('span') < 0);
+			var description = searchMapResult['can-core'].description;
+			assert.ok(description.indexOf('span') < 0, 'stripped basic HTML');
+			assert.ok(description.indexOf('input') < 0, 'stripped inputs');
 		});
 	});
 
