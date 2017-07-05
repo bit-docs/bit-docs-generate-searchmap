@@ -166,5 +166,10 @@
       "description": "A renderer function that will render the template into a document fragment.\n"
     },
     "comment": " "
+  },
+  "Component": {
+    "name": "Component",
+    "type": "add",
+    "signature": []
   }
 }

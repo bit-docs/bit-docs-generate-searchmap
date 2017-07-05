@@ -28,26 +28,32 @@ module.exports = function(docMap, siteConfig) {
 		for (name in docMap) {
 			if (docMap.hasOwnProperty(name)) {
 				var docObj = docMap[name];
-				var helpers = bitDocsHelpers(docMap, siteConfig, function(){
-					return docObj;
-				}, {});
-				
-				var description = helpers.makeHtml(docObj.description);
-				description = helpers.makeLinks(description);
-				description = entities.decode(description);
-				description = striptags(description,
-					// Allowed tags
-					['a', 'em', 'code']
-				);
+				var signaturesHaveContent = docObj.signatures && docObj.signatures.some(function(signature){
+					return signature.params || signature.return || signature.options;
+				});
+				// If there is no body, it's likely we don't want to index it
+				if(docObj.description || signaturesHaveContent){
+					var helpers = bitDocsHelpers(docMap, siteConfig, function(){
+						return docObj;
+					}, {});
+					
+					var description = helpers.makeHtml(docObj.description);
+					description = helpers.makeLinks(description);
+					description = entities.decode(description);
+					description = striptags(description, 
+						// Allowed tags
+						['a', 'em', 'code']
+					);
 
-				var searchObj = {
-					name: docObj.name,
-					title: docObj.title,
-					description: description,
-					url: filename(docObj, siteConfig),
-					dest: 'doc/'
-				};
-				searchMap[name] = searchObj;
+					var searchObj = {
+						name: docObj.name,
+						title: docObj.title,
+						description: description,
+						url: filename(docObj, siteConfig),
+						dest: 'doc/'
+					};
+					searchMap[name] = searchObj;
+				}
 			}
 		}
 

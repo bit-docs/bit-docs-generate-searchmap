@@ -52,6 +52,14 @@ describe("bitDocs.generators.searchMap",function(){
 		});
 	});
 
+	it("(bitDocs.generators.searchMap.searchMap) Filters hidden and empty docObjects", function(){
+		return docMapPromise.then(function(docMap){
+			return searchMap(docMap, siteConfig).then(function(searchMapResult){
+				assert.ok(!searchMapResult.Component);
+			});
+		});
+	});
+
 	it("bit-docs links should render", function(){
 		return docMapPromise.then(function(docMap){
 			return searchMap(docMap, siteConfig);
