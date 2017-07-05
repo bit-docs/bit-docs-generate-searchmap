@@ -26,8 +26,11 @@ module.exports = function(docMap, siteConfig) {
 		for (name in docMap) {
 			if (docMap.hasOwnProperty(name)) {
 				var docObj = docMap[name];
+				var signaturesHaveContent = docObj.signatures && docObj.signatures.some(function(signature){
+					return signature.params || signature.return || signature.options;
+				});
 				// If there is no body, it's likely we don't want to index it
-				if(docObj.description || docObj.signatures || docObj.params || docObj.return || docObj.options){
+				if(docObj.description || signaturesHaveContent){
 					var helpers = bitDocsHelpers(docMap, siteConfig, function(){
 						return docObj;
 					}, {});
