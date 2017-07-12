@@ -68,6 +68,14 @@ describe("bitDocs.generators.searchMap",function(){
 		});
 	});
 
+	it("(bitDocs.generators.searchMap.searchMap) Filters docObjects with only “undefined\n” as their description", function(){
+		return docMapPromise.then(function(docMap){
+			return searchMap(docMap, siteConfig).then(function(searchMapResult){
+				assert.ok(!searchMapResult['can.Control']);
+			});
+		});
+	});
+
 	it("bit-docs links should render", function(){
 		return docMapPromise.then(function(docMap){
 			return searchMap(docMap, siteConfig);
