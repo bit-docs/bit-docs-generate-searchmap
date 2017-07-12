@@ -170,6 +170,7 @@
   "Component": {
     "name": "Component",
     "type": "add",
+    "description": "\n",
     "signature": []
   }
 }
