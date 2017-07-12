@@ -31,7 +31,7 @@ module.exports = function(docMap, siteConfig) {
 					return signature.params || signature.return || signature.options;
 				});
 				// If there is no body, it's likely we don't want to index it
-				if (description || signaturesHaveContent) {
+				if ((description && description !== 'undefined') || signaturesHaveContent) {
 					var helpers = bitDocsHelpers(docMap, siteConfig, function(){
 						return docObj;
 					}, {});
