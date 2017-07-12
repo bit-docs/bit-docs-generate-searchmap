@@ -43,12 +43,20 @@ describe("bitDocs.generators.searchMap",function(){
 	});
 
 	it("(bitDocs.generators.searchMap.searchMap) Strips HTML from the description", function(){
-		docMapPromise.then(function(docMap){
+		return docMapPromise.then(function(docMap){
 			return searchMap(docMap, siteConfig);
 		}).then(function(searchMapResult){
 			var description = searchMapResult['can-core'].description;
 			assert.ok(description.indexOf('span') < 0, 'stripped basic HTML');
-			assert.ok(description.indexOf('input') < 0, 'stripped inputs');
+		});
+	});
+
+	it("(bitDocs.generators.searchMap.searchMap) Leaves HTML code examples in the description", function(){
+		return docMapPromise.then(function(docMap){
+			return searchMap(docMap, siteConfig);
+		}).then(function(searchMapResult){
+			var description = searchMapResult['can-core'].description;
+			assert.ok(description.indexOf('<code>&lt;input /&gt;</code>') > 0, 'stripped inputs');
 		});
 	});
 
