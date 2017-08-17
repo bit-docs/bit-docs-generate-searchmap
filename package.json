@@ -1,6 +1,6 @@
 {
   "name": "bit-docs-generate-searchmap",
-  "version": "0.1.7",
+  "version": "0.1.7-pre.0",
   "description": "Generates a searchmap from the docMap",
   "main": "index.js",
   "scripts": {
@@ -30,7 +30,6 @@
     "fs-extra": "0.30.0",
     "lodash": "~4.13.1",
     "md5": "2.1.0",
-    "steal-tools": "0.16.X",
     "striptags": "^3.0.1"
   },
   "devDependencies": {
