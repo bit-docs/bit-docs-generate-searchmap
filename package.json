@@ -1,6 +1,6 @@
 {
   "name": "bit-docs-generate-searchmap",
-  "version": "0.2.0-pre.0",
+  "version": "0.2.0-pre.1",
   "description": "Generates a searchmap from the docMap",
   "main": "index.js",
   "scripts": {
