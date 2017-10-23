@@ -39,27 +39,16 @@ module.exports = function(docMap, siteConfig) {
 				var descriptionAsStrippedHTML = striptags(descriptionAsHTML, ['a', 'code', 'em', 'strong']);
 
 				var searchObj = {
-					name: docObj.name,
-					title: docObj.title,
-					description: descriptionAsStrippedHTML,
-					url: filename(docObj, siteConfig),
-					dest: 'doc/'
+					collection: docObj.collection || undefined,
+					description: descriptionAsStrippedHTML || undefined,
+					name: docObj.name || undefined,
+					order: docObj.order,
+					parent: docObj.parent || undefined,
+					subchildren: docObj.subchildren || undefined,
+					title: docObj.title || undefined,
+					type: docObj.type || undefined,
+					url: filename(docObj, siteConfig) || undefined
 				};
-				if (docObj.collection) {
-					searchObj.collection = docObj.collection;
-				}
-				if (docObj.order) {
-					searchObj.order = docObj.order;
-				}
-				if (docObj.parent) {
-					searchObj.parent = docObj.parent;
-				}
-				if (docObj.subchildren) {
-					searchObj.subchildren = docObj.subchildren;
-				}
-				if (docObj.type) {
-					searchObj.type = docObj.type;
-				}
 				searchMap[name] = searchObj;
 			}
 		}
