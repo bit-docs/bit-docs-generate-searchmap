@@ -24,33 +24,32 @@ module.exports = function(docMap, siteConfig) {
 		var searchMap = {};
 		var name;
 		for (name in docMap) {
-			if (docMap.hasOwnProperty(name)) {
-				var docObj = docMap[name];
+			var docObj = (docMap.hasOwnProperty(name)) ? docMap[name] : null;
+			if (docObj && !docObj.hide) {
+
+				var helpers = bitDocsHelpers(docMap, siteConfig, function(){
+					return docObj;
+				}, {});
+
+				// Convert bit-docs markdown to HTML
 				var description = docObj.description && docObj.description.trim();
-				var signaturesHaveContent = docObj.signatures && docObj.signatures.some(function(signature){
-					return signature.params || signature.return || signature.options;
-				});
-				// If there is no body, it's likely we don't want to index it
-				if ((description && description !== 'undefined') || signaturesHaveContent) {
-					var helpers = bitDocsHelpers(docMap, siteConfig, function(){
-						return docObj;
-					}, {});
+				var descriptionAsHTML = helpers.makeLinks(helpers.makeHtml(description));
 
-					// Convert bit-docs markdown to HTML
-					var descriptionAsHTML = helpers.makeLinks(helpers.makeHtml(description));
+				// Only allow certain HTML elements
+				var descriptionAsStrippedHTML = striptags(descriptionAsHTML, ['a', 'code', 'em', 'strong']);
 
-					// Only allow certain HTML elements
-					var descriptionAsStrippedHTML = striptags(descriptionAsHTML, ['a', 'code', 'em', 'strong']);
-
-					var searchObj = {
-						name: docObj.name,
-						title: docObj.title,
-						description: descriptionAsStrippedHTML,
-						url: filename(docObj, siteConfig),
-						dest: 'doc/'
-					};
-					searchMap[name] = searchObj;
-				}
+				var searchObj = {
+					collection: docObj.collection || undefined,
+					description: descriptionAsStrippedHTML || undefined,
+					name: docObj.name || undefined,
+					order: docObj.order,
+					parent: docObj.parent || undefined,
+					subchildren: docObj.subchildren || undefined,
+					title: docObj.title || undefined,
+					type: docObj.type || undefined,
+					url: filename(docObj, siteConfig) || undefined
+				};
+				searchMap[name] = searchObj;
 			}
 		}
 

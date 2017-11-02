@@ -178,5 +178,11 @@
     "description": "undefined\n",
     "url": "can.Control.html",
     "dest": "doc/"
+  },
+  "guides/what-is-canjs": {
+    "description": "\n",
+    "name": "guides/what-is-canjs",
+    "title": "What is CanJS?",
+    "hide": true
   }
 }

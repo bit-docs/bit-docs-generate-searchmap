@@ -42,6 +42,14 @@ describe("bitDocs.generators.searchMap",function(){
 		});
 	});
 
+	it("(bitDocs.generators.searchMap.searchMap) Excludes docObjects with @hide", function(){
+		return docMapPromise.then(function(docMap){
+			return searchMap(docMap, siteConfig).then(function(searchMapResult){
+				assert.ok(!searchMapResult['guides/what-is-canjs']);
+			});
+		});
+	});
+
 	it("(bitDocs.generators.searchMap.searchMap) Strips HTML from the description", function(){
 		return docMapPromise.then(function(docMap){
 			return searchMap(docMap, siteConfig);
@@ -60,18 +68,18 @@ describe("bitDocs.generators.searchMap",function(){
 		});
 	});
 
-	it("(bitDocs.generators.searchMap.searchMap) Filters hidden and empty docObjects", function(){
+	it("(bitDocs.generators.searchMap.searchMap) Does not filter hidden and empty docObjects", function(){
 		return docMapPromise.then(function(docMap){
 			return searchMap(docMap, siteConfig).then(function(searchMapResult){
-				assert.ok(!searchMapResult.Component);
+				assert.ok(searchMapResult.Component);
 			});
 		});
 	});
 
-	it("(bitDocs.generators.searchMap.searchMap) Filters docObjects with only “undefined\n” as their description", function(){
+	it("(bitDocs.generators.searchMap.searchMap) Does not filter docObjects with only “undefined\n” as their description", function(){
 		return docMapPromise.then(function(docMap){
 			return searchMap(docMap, siteConfig).then(function(searchMapResult){
-				assert.ok(!searchMapResult['can.Control']);
+				assert.ok(searchMapResult['can.Control']);
 			});
 		});
 	});
